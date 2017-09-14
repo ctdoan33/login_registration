@@ -68,6 +68,12 @@ def reg():
     elif not EMAIL_REGEX.match(request.form["email"]):
         flash("Invalid email!", "reg")
         valid = False
+    else:
+        query = "SELECT email FROM registrations WHERE email = :email"
+        data = {"email":request.form["email"]}
+        if mysql.query_db(query, data) != []:
+            flash("An account with that email is already registered!", "reg")
+            valid = False
     if len(request.form["password"]) < 1:
         flash("Password must not be blank!", "reg")
         valid = False
